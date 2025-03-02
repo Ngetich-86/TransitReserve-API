@@ -8,8 +8,21 @@ import { randomBytes } from 'crypto';
 import { error } from "console";
 import { and, eq, gt } from "drizzle-orm";
 
-const secret = process.env.SECRET!;
-const expiresIn = process.env.EXPIRESIN!;
+// const secret = process.env.SECRET!;
+// const expiresIn = process.env.EXPIRESIN!;
+const secret = process.env.SECRET as string;
+// const expiresIn = process.env.EXPIRESIN as string;
+const expiresIn = parseInt(process.env.EXPIRESIN as string, 10); // Convert to number
+
+if (!secret || isNaN(expiresIn)) {
+  console.error("JWT Secret or Expiration not set correctly");
+  throw new Error("Server configuration error");
+}
+
+if (!secret || !expiresIn) {
+  console.error("JWT Secret or Expiration not set");
+  throw new Error("Server configuration error");
+}
 
 export const registerUser = async (user: any) => {
 
@@ -193,9 +206,8 @@ export const loginUser = async (email: string, password: string) => {
   const token = jwt.sign(
     { id: user.user_id, email: user.email, role: auth.role },
     process.env.SECRET as jwt.Secret, // Explicitly casting
-    { expiresIn: process.env.EXPIRESIN as string } // Ensure it's used as a string
+    { expiresIn } // Ensure it's used as a string
   );
-  // console.log("JWT Secret:", process.env.SECRET);
 
 
   return { token, user };
