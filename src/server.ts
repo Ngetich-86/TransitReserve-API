@@ -43,13 +43,14 @@ app.get("/", async (c) => {
   }
 });
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 3000;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
 assert(PORT, "PORT is required and must be a number");
 
-serve({
-  fetch: app.fetch,
-  port: PORT,
-});
+// serve({
+//   fetch: app.fetch,
+//   port: PORT,
+// });
+
 console.log('Routes registered:', app.routes);
 console.log(`✅ Server is running on http://localhost:${PORT}`);
 assert(process.env.PORT, "PORT is required");
