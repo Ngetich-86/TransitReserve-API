@@ -209,7 +209,6 @@ export const loginUser = async (email: string, password: string) => {
     { expiresIn } // Ensure it's used as a string
   );
 
-
   return { token, user };
 };
 

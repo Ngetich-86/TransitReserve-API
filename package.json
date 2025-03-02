@@ -4,7 +4,7 @@
   "description": "",
   "main": "server.ts",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
+    "test": "jest",
     "dev": "tsx watch ./src/server.ts",
     "start": "node ./dist/server.js",
     "build": "tsc",
@@ -43,6 +43,7 @@
     "@types/pg": "^8.11.10",
     "@types/react-toastify": "^4.1.0",
     "drizzle-kit": "^0.29.1",
+    "jest": "^29.7.0",
     "pg": "^8.13.1",
     "tsx": "^4.19.2",
     "typescript": "^5.7.2"
