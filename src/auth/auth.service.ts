@@ -12,7 +12,7 @@ const secret = process.env.SECRET!;
 const expiresIn = process.env.EXPIRESIN!;
 
 export const registerUser = async (user: any) => {
-  
+
   registerSchema.parse(user);
 
   const existingUser = await db
@@ -77,7 +77,7 @@ export const registerUser = async (user: any) => {
   }).execute();
 
   const verificationUrl = `${process.env.FRONTEND_URL}/verify-account?token=${verificationToken}`;
-await sendVerificationEmail(newUser[0].email, verificationUrl, verificationToken);
+  await sendVerificationEmail(newUser[0].email, verificationUrl, verificationToken);
 
 
   return 'User registered successfully. Please check your email for verification link.';
@@ -109,7 +109,7 @@ export const verifyUser = async (token: string) => {
     // console.error("Invalid or expired verification token");
     // throw new Error("Invalid or expired verification token");
   }
-  
+
   const verifiedUser = user[0];
 
   // Debug - Show current time & expiry time in UTC for final clarity
@@ -139,15 +139,15 @@ export const loginUser = async (email: string, password: string) => {
 
   // Step 1: Find user by email
   const users = await db
-      .select()
-      .from(userTable)
-      .where(eq(userTable.email, email))
-      .execute();
+    .select()
+    .from(userTable)
+    .where(eq(userTable.email, email))
+    .execute();
 
   console.log("User query result:", users);
 
   if (users.length === 0) {
-      throw new Error("User not found! Try Again");
+    throw new Error("User not found! Try Again");
   }
 
   const user = users[0];
@@ -155,15 +155,15 @@ export const loginUser = async (email: string, password: string) => {
   // Step 2: Find authentication record for the user
   console.log("Searching for auth record for user ID:", user.user_id);
   const auths = await db
-      .select()
-      .from(authTable)
-      .where(eq(authTable.user_id, user.user_id))
-      .execute();
+    .select()
+    .from(authTable)
+    .where(eq(authTable.user_id, user.user_id))
+    .execute();
 
   console.log("Auth query result:", auths);
 
   if (auths.length === 0) {
-      throw new Error("Invalid credentials! Try again");
+    throw new Error("Invalid credentials! Try again");
   }
 
   const auth = auths[0];
@@ -173,22 +173,30 @@ export const loginUser = async (email: string, password: string) => {
   const isPasswordValid = await bcrypt.compare(password, auth.password_hash);
 
   if (!isPasswordValid) {
-      console.error("Password mismatch!");
-      throw new Error("Invalid credentials! Try again");
+    console.error("Password mismatch!");
+    throw new Error("Invalid credentials! Try again");
   }
 
   // Step 4: Generate a JWT token
   if (!process.env.SECRET || !process.env.EXPIRESIN) {
-      console.error("JWT Secret or Expiration not set");
-      throw new Error("Server configuration error");
+    console.error("JWT Secret or Expiration not set");
+    throw new Error("Server configuration error");
   }
 
   console.log("Generating JWT token...");
+  // const token = jwt.sign(
+  //     { id: user.user_id, email: user.email, role: auth.role },
+  //     process.env.SECRET!,
+  //     { expiresIn: process.env.EXPIRESIN! }
+  // );
+  // Fix: Explicitly cast process.env.SECRET as jwt.Secret
   const token = jwt.sign(
-      { id: user.user_id, email: user.email, role: auth.role },
-      process.env.SECRET!,
-      { expiresIn: process.env.EXPIRESIN! }
+    { id: user.user_id, email: user.email, role: auth.role },
+    process.env.SECRET as jwt.Secret, // Explicitly casting
+    { expiresIn: process.env.EXPIRESIN as string } // Ensure it's used as a string
   );
+  // console.log("JWT Secret:", process.env.SECRET);
+
 
   return { token, user };
 };
@@ -229,7 +237,7 @@ export const updateUserService = async (userId: number, updatedData: any) => { /
 };
 
 export const deleteUserService = async (userId: number) => { // Ensure userId is a number
-    const deletedUser = await db
+  const deletedUser = await db
     .delete(userTable) // Provide the table name here
     .where(eq(userTable.user_id, userId))
     .returning()
