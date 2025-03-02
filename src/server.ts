@@ -43,7 +43,7 @@ app.get("/", async (c) => {
   }
 });
 
-const PORT = process.env.PORT ? Number(process.env.PORT) : 8080;
+const PORT = process.env.PORT ? Number(process.env.PORT) : 8081;
 assert(PORT, "PORT is required and must be a number");
 
 // serve({
