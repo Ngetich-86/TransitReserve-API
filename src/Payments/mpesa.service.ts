@@ -23,12 +23,8 @@ const mpesa = {
   passKey:
     process.env.MPESA_PASSKEY ||
     "bfb279f9aa9bdbcf158e97dd71a467cd2e0c893059b10f78e6b72ada1ed2c919",
-  consumerKey:
-    process.env.MPESA_CONSUMER_KEY ||
-    "9AQyjfoahLboUEsixGB3c40hljkB7oJc2fU3RB6B5tc1AjXj",
-  consumerSecret:
-    process.env.MPESA_CONSUMER_SECRET ||
-    "3euoJezUOiqiv5OjZ8zgBDssQwH2avgfhAVfk8OcnQRxyAmZj2FzY6TAegGAS9b1",
+  consumerKey: process.env.MPESA_CONSUMER_KEY,
+  consumerSecret: process.env.MPESA_CONSUMER_SECRET,
   callBackURL:
     process.env.MPESA_CALLBACK_URL ||
     "https://8516-105-163-157-220.ngrok-free.app/api/v1/callback",
